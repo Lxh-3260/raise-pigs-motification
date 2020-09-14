@@ -204,7 +204,48 @@ int main()
         }
         
     }
-
+		
+	//查询特定猪圈的猪的种类和数量
+    Pig* t;
+    int x;
+    int a[3]={0};
+    cout <<endl<< "输入你要查询的猪圈编号:";
+    cin >> x;                                    //x为你要查询的猪圈编号
+    t = pigfarm[x];
+    for (; t != nullptr; t = t->next)
+    {
+		if(t->colour ==1) a[0]++;
+		if(t->colour ==2) a[1]++;
+		if(t->colour ==3) a[2]++;
+    }
+    t=nullptr;
+    cout << "第"<<x<<"个猪圈中猪的种类  黑猪 : "<<a[0]<<" 花猪 ："<<a[1]<<" 大白花猪 : "<<a[2]; 
+    
+    // 查询当前某一个猪圈中某头猪的情况 
+    cout<<endl<<"输入你要查询的猪的编号：";
+    int no_pig;
+	cin>>no_pig;
+	t=pigfarm[x];
+	if(no_pig>numbers[x]) cout<<"猪圈内没有这头猪";
+	else
+	{
+		int flag(1);
+		for(;t!=nullptr;t=t->next )
+		{
+			if(flag==no_pig)
+			{
+				if(t->colour ==1) cout<<"猪的种类为黑猪"<<endl;
+				else if(t->colour ==2) cout<<"猪的种类为白猪"<<endl;
+				else if(t->colour ==3) cout<<"猪的种类为大白花猪"<<endl;
+				cout<<"猪的饲养时长为"<<t->life<<"天"<<endl;
+				cout<<"猪的体重为"<<t->weight<<"千克"; 
+			}
+			flag++;
+		}
+		t=nullptr;
+	}
+	
+	//统计当前猪圈每个种类猪的数量，体重，饲养时间分布情况
 	
 	 
 }
