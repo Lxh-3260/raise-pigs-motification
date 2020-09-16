@@ -4,6 +4,7 @@
 #include<algorithm>
 #include<stdio.h>
 #include<stdlib.h>
+#include<fstream> 
 
 #define random(x) (rand()%x)            //便于随机数的生成
 
@@ -14,13 +15,15 @@ struct  Pig {
     int colour;                            //猪圈里每头猪的颜色：1为黑猪，2为小花猪，3为大白花猪
     int life;                            //记录每个猪在猪圈的时间，当饲养超过1年时，要出圈
     double weight;                        //记录每个猪的体重，当体重大于150斤，要出圈
+    bool sick;
     Pig* next;
-    Pig(int a, int b, int c, double d)
+    Pig(int a, int b, int c, double d,bool e)
     {
         number = a;
         colour = b;
         life = c;
         weight = d;
+        sick = e;
         next = NULL;
     }
 };
@@ -40,7 +43,7 @@ bool judgeput(int x, int y)
 //找到链表中的最后一个元素，便于后面给新入圈的猪编号
 Pig* findlast(Pig* t)
 {
-    for (; t->next != nullptr; t = t->next);    //t的下一个节点不为nullptr，则将p指向next，直到最后一个节点
+    while(t->next != nullptr) t=t->next ;   //t的下一个节点不为nullptr，则将p指向next，直到最后一个节点
     return t;
 }
 
@@ -91,10 +94,11 @@ void gainweight()
     for (int i = 0; i <= 99; i++)
     {
         Pig* t = pigfarm[i];                    //t指向pigfarm的第一头猪
-        for (; t != nullptr; t = t->next)            //t是最后一头猪的next时跳出循环
+        while(t != nullptr)           //t是最后一头猪的next时跳出循环
         {
             t->weight += (random(12)) / 10.0;    //体重的增长用随机数生成
             t->life++;                        //饲养时长+1天
+            t = t->next ;
         }
     }
 }
@@ -124,12 +128,14 @@ double  sellout(void)
     {
         Pig* prev, * t;                                    //定义两个Pig指针，用于后面猪的出圈（节点删除）
         if (numbers[i] == 0) continue;                        //第i个猪圈没猪，continue，下一个猪圈
-        while (pigfarm[i] != nullptr && sellable(pigfarm[i]))                            //第i个猪圈有猪的情况下，判断第一头猪满不满足卖出条件，准备卖出
+        while (pigfarm[i] != nullptr && sellable(pigfarm[i]))                           
+		//第i个猪圈有猪的情况下，判断第一头猪满不满足卖出条件，准备卖出
         {
             sum += price(pigfarm[i]);                        //满足卖出条件，计算该猪的单价
             Pig* temp = pigfarm[i];
             pigfarm[i] = pigfarm[i]->next;
             delete temp;
+            temp = nullptr;
             numbers[i]--;                            //猪圈中猪的总数-1
         }
 
@@ -178,12 +184,12 @@ int main()
     int initialization_1 = random(500);        //利用随机数的方法初始化第一批幼崽的数量
     for (int i = 0; i <= initialization_1; i++)
     {
-        Pig* t = new Pig(0, random(3) + 1, 0, ((double)random(300) + 200.0) / 10.0);
+        Pig* t = new Pig(0, random(3) + 1, 0, ((double)random(300) + 200.0) / 10.0, false);
         //初始化第一批幼崽的信息 ，编号都和饲养时长都初始化为0，后面的函数会编号和改变饲养时长，猪的品种和体重都用随机数生成
         putin(t);
     }
     int days = 0;
-    while (days != 181)
+    while (days != 181)					//五年 
     {
         days++;
         gainweight();
@@ -195,14 +201,13 @@ int main()
         	cout<<endl;
             for (int i = 0; i <= initialization_2; i++)
             {
-                Pig* t = new Pig(0, random(3) + 1, 0, ((double)random(300) + 200.0) / 10.0);//初始化猪崽的信息
+                Pig* t = new Pig(0, random(3) + 1, 0, ((double)random(300) + 200.0) / 10.0, false);//初始化猪崽的信息
                 if (putin(t) == false) break;    //执行判断函数putin，并将猪崽放入
             }
             cout<<"放入猪崽后各猪圈中猪的数量："<<endl; 
 			for(int i=0;i<=99;i++) cout<<numbers[i]<<" ";
-			cout<<endl;
+			cout<<endl<<endl; 
         }
-        
     }
 		
 	//查询特定猪圈的猪的种类和数量
@@ -226,7 +231,7 @@ int main()
     int no_pig;
 	cin>>no_pig;
 	t=pigfarm[x];
-	if(no_pig>numbers[x]) cout<<"猪圈内没有这头猪";
+	if(no_pig>numbers[x]) cout<<"猪圈内没有这头猪"<<endl;
 	else
 	{
 		int flag(1);
@@ -238,7 +243,7 @@ int main()
 				else if(t->colour ==2) cout<<"猪的种类为白猪"<<endl;
 				else if(t->colour ==3) cout<<"猪的种类为大白花猪"<<endl;
 				cout<<"猪的饲养时长为"<<t->life<<"天"<<endl;
-				cout<<"猪的体重为"<<t->weight<<"千克"; 
+				cout<<"猪的体重为"<<t->weight<<"千克"<<endl;; 
 			}
 			flag++;
 		}
@@ -246,6 +251,65 @@ int main()
 	}
 	
 	//统计当前猪圈每个种类猪的数量，体重，饲养时间分布情况
+	int number_pigs[3]={0};
+	int sum_pigs=0;
+	double weight_pigs[3]={0};
+	int life_pigs1[3]={0};				//0~90天的猪
+	int life_pigs3[3]={0};				//90以上的猪 
+	for(int i=0;i<=99;i++)
+	{
+		t=pigfarm[i];
+		for(;t!=nullptr;t=t->next )
+		{
+			if(t->colour ==1)
+			{
+				number_pigs[0]++;
+				weight_pigs[0]+=t->weight ;
+				if(t->life <90) life_pigs1[0]++;
+				else if(t->life>=90) life_pigs3[0]++;
+			}
+			else if(t->colour ==2)
+			{
+				number_pigs[1]++;
+				weight_pigs[1]+=t->weight ;
+				if(t->life <90) life_pigs1[1]++;
+				else if(t->life>=90) life_pigs3[1]++;
+			}
+			else if(t->colour ==3)
+			{
+				number_pigs[2]++;
+				weight_pigs[2]+=t->weight ;
+				if(t->life <90) life_pigs1[2]++;
+				else if(t->life>=90) life_pigs3[2]++;
+			}
+		}
+	}
+	t=nullptr;
+	sum_pigs=number_pigs[0]+number_pigs[1]+number_pigs[2];
+	cout<<"黑猪的总数量为："<<number_pigs[0]<<"头"<<endl;
+	cout<<"花猪的总数量为："<<number_pigs[1]<<"头"<<endl;
+	cout<<"大白花猪的总数量为："<<number_pigs[2]<<"头"<<endl;
+	cout<<"黑猪的总体重为："<<weight_pigs[0]<<"kg"<<endl;
+	cout<<" 花猪的总体重为："<<weight_pigs[1]<<"kg"<<endl;
+	cout<<"大白花猪的总体重为："<<weight_pigs[2]<<"kg"<<endl;
+	cout<<"黑猪饲养时长0~90天有："<<life_pigs1[0]<<"头"<<endl;
+	cout<<"黑猪饲养时长90天以上有："<<life_pigs3[0]<<"头"<<endl;
+	cout<<"花猪饲养时长0~90天有："<<life_pigs1[1]<<"头"<<endl;
+	cout<<"花猪饲养时长90天以上有："<<life_pigs3[1]<<"头"<<endl;
+	cout<<"大白花猪猪饲养时长0~90天有："<<life_pigs1[2]<<"头"<<endl;
+	cout<<"大白花猪饲养时长90天以上有："<<life_pigs3[2]<<"头"<<endl;
 	
-	 
+	//模拟养猪场某一只猪得了猪瘟
+	bool pigfarm_sick[100];
+	memset(pigfarm_sick,false,sizeof(bool)*100);	//bool数组每个都置false，表示现在还没有猪生病 
+	int randill=random(100),sickday=0;				//随机生成一个生病的猪圈
+	pigfarm_sick[randill]=true;
+	
+	for(int i=0;i<numbers[i];i++)
+	{
+		if(random(2)==1)
+		{
+			  
+		}
+	}
 }
