@@ -302,14 +302,140 @@ int main()
 	//模拟养猪场某一只猪得了猪瘟
 	bool pigfarm_sick[100];
 	memset(pigfarm_sick,false,sizeof(bool)*100);	//bool数组每个都置false，表示现在还没有猪生病 
-	int randill=random(100),sickday=0;				//随机生成一个生病的猪圈
+	int randill_1=random(100);
+	while(numbers[ranill_1]==0) randill_1=random(100);
+	int randill_2=random(numbers[randil_1]),sickday=0;
+	//随机生成一个生病的猪圈,编号为randill_1,随机生成一个生病的猪，该猪是猪圈中第randill_2头猪
 	pigfarm_sick[randill]=true;
+	int flag_sick=0;
+	int sum_sickpigs=0;
 	
-	for(int i=0;i<numbers[i];i++)
+	//编号为randill_2号的猪感染上猪瘟 
+	for(t=pigfarm[randill_1];t!=nullptr;t=t->next )
 	{
-		if(random(2)==1)
+		if(randill_2==0)
 		{
-			  
+			t->sick =true;
+			sum_sickpigs++;
+			break;
+		}
+		else
+		{
+			t=t->next;
+			flag_sick++;
+			if(flag_sick==randill_2)
+			{
+				t->sick =true;
+				sum_sickpigs++;
+				break;
+			}
+		}
+	}
+	t=nullptr;
+	
+	//开始传播瘟疫 
+	int sickfarm_no[100];//用于记录下有瘟疫存在的猪圈，方便之后遍历 
+	memset(sickfarm_no,-1,sizeof(int)*100);
+	sickfarm_n0[0]=randill_1;//randill_1已经出现了猪瘟
+	while(sum_sickpigs!=sum_pigs)
+	{
+		days++; 
+		//遍历sickfarm_no，直到猪圈中所有的猪都得上了猪瘟 
+		for(int i=0;sickfarm_no[i]!=-1;i++)
+		{
+			if(sickfarm_no[i]==1)
+			{
+				for(t=pigfarm[2];t!=nullptr;t=t->next )
+				{
+					if(random(15)==1&&t->sick ==false)
+					{
+						t->sick =true;
+						sum_sickpigs++;
+						if(pigfarm_sick[2]=false)
+						{
+							pigfarm_sick[2]=true;
+							int j;
+							for(j=0;sickfarm_no[j]!=-1;j++);
+							if(j<=99) sickfarm_no[j]=2;
+						}
+					}
+				}
+			}
+			if(sickfarm_no[i]==99)
+			{
+				for(t=pigfarm[98];t!=nullptr;t=t->next )
+				{
+					if(random(15)==1&&t->sick ==false)
+					{
+						t->sick =true;
+						sum_sickpigs++;
+						if(pigfarm_sick[98]=false)
+						{
+							pigfarm_sick[98]=true;
+							int j;
+							for(j=0;sickfarm_no[j]!=-1;j++);
+							if(j<=99) sickfarm_no[j]=98;
+						}
+					}
+				}
+			}
+			else if
+			{
+				for(t=pigfarm[sickfarm_no[i-1]];t!=nullptr;t=t->next )
+				{
+					if(random(15)==1&&t->sick ==false)
+					{
+						t->sick =true;
+						sum_sickpigs++;
+						if(pigfarm_sick[sickfarm_no[i-1]]=false)
+						{
+							pigfarm_sick[sickfarm_no[i-1]]=true;
+							int j;
+							for(j=0;sickfarm_no[j]!=-1;j++);
+							if(j<=99) sickfarm_no[j]=sickfarm_no[i-1];
+						}
+					}
+				}
+				for(t=pigfarm[sickfarm_no[i-1]];t!=nullptr;t=t->next )
+				{
+					if(random(15)==1&&t->sick ==false)
+					{
+						t->sick =true;
+						sum_sickpigs++;
+						if(pigfarm_sick[sickfarm_no[i+1]]=false)
+						{
+							pigfarm_sick[sickfarm_no[i+1]]=true;
+							int j;
+							for(j=0;sickfarm_no[j]!=-1;j++);
+							if(j<=99) sickfarm_no[j]=sickfarm_no[i+1];
+						}
+					}
+				}
+			}
+		}
+		
+	}
+	cout<<"如果不采取隔离措施,"<<days<<"天猪全部死光"; 
+
+	//如果采取隔离措施
+	int randill_isolate1=random(100) ;
+	while(randill_isolate==0) randill_isolate=random(100) ;
+	int randill_isolate2=random(numbers[randill_isolate1]);
+	for(t=pigfarm[randill_isolate1];t!=nullptr;t=t->next )
+	{
+		if(numbers[randill_isolate1]==1)
+		{
+			delete t;
+			t=nullptr;
+			numbers[randill_isolate1]=0;
+			break;
+		}
+		else
+		{
+			if(randill_isolate2==0)
+			{
+				pigfarm[randill_isolate1]=
+			}
 		}
 	}
 }
