@@ -11,21 +11,21 @@
 using namespace std;
 
 struct  Pig {
-    int number;                            //0~100ºÅÖíÈ¦Àï£¬Ã¿Í·ÖíµÄ±àºÅ£¨0~10£©
-    int colour;                            //ÖíÈ¦ÀïÃ¿Í·ÖíµÄÑÕÉ«£º1ÎªºÚÖí£¬2ÎªĞ¡»¨Öí£¬3Îª´ó°×»¨Öí
-    int life;                            //¼ÇÂ¼Ã¿¸öÖíÔÚÖíÈ¦µÄÊ±¼ä£¬µ±ËÇÑø³¬¹ı1ÄêÊ±£¬Òª³öÈ¦
-    double weight;                        //¼ÇÂ¼Ã¿¸öÖíµÄÌåÖØ£¬µ±ÌåÖØ´óÓÚ150½ï£¬Òª³öÈ¦
-    bool sick;
-    Pig* next;
-    Pig(int a, int b, int c, double d,bool e)
-    {
-        number = a;
-        colour = b;
-        life = c;
-        weight = d;
-        sick = e;
-        next = NULL;
-    }
+	int number;                            //0~100ºÅÖíÈ¦Àï£¬Ã¿Í·ÖíµÄ±àºÅ£¨1~10£©
+	int colour;                            //ÖíÈ¦ÀïÃ¿Í·ÖíµÄÑÕÉ«£º1ÎªºÚÖí£¬2ÎªĞ¡»¨Öí£¬3Îª´ó°×»¨Öí
+	int life;                            //¼ÇÂ¼Ã¿¸öÖíÔÚÖíÈ¦µÄÊ±¼ä£¬µ±ËÇÑø³¬¹ı1ÄêÊ±£¬Òª³öÈ¦
+	double weight;                        //¼ÇÂ¼Ã¿¸öÖíµÄÌåÖØ£¬µ±ÌåÖØ´óÓÚ150½ï£¬Òª³öÈ¦
+	bool sick;
+	Pig* next;
+	Pig(int a, int b, int c, double d, bool e)
+	{
+		number = a;
+		colour = b;
+		life = c;
+		weight = d;
+		sick = e;
+		next = NULL;
+	}
 };
 
 Pig* pigfarm[100];                    //×Ü¹²ÓĞ100¸öÖíÈ¦£¬pigfarmÀïÃæÃ¿¸öÔªËØ¶¼´æÁËÒ»¸öÖ¸Õë£¬Ö¸ÏòÃ¿¸öÖíÈ¦µÄµÚÒ»Í·Öí
@@ -35,407 +35,502 @@ int numbers[100] = { 0 };                    //¼ÇÂ¼Ã¿¸öÖíÈ¦µÄÖíµÄÊıÁ¿£¬±ãÓÚÊ¹Ó×á
 //ÅĞ¶ÏÖíÈ¦ÖĞµÄÖíµÄÖÖÀà
 bool judgeput(int x, int y)
 {
-    if (x == 1 && y >= 2) return false;            //Èç¹û³öÏÖºÚÖí£¨1£©£¬Ôò²»ÄÜÓĞĞ¡»¨Öí£¨2£©»ò´ó»¨°×Öí£¨3£©
-    else if (x >= 2 && y == 1) return false;        // Èç¹ûÓĞĞ¡»¨Öí£¨2£©»ò´ó»¨°×Öí£¨3£©£¬Ôò²»ÄÜÓĞºÚÖí£¨1£©
-    else return true;
+	if (x == 1 && y >= 2) return false;            //Èç¹û³öÏÖºÚÖí£¨1£©£¬Ôò²»ÄÜÓĞĞ¡»¨Öí£¨2£©»ò´ó»¨°×Öí£¨3£©
+	else if (x >= 2 && y == 1) return false;        // Èç¹ûÓĞĞ¡»¨Öí£¨2£©»ò´ó»¨°×Öí£¨3£©£¬Ôò²»ÄÜÓĞºÚÖí£¨1£©
+	else return true;
 }
 
 //ÕÒµ½Á´±íÖĞµÄ×îºóÒ»¸öÔªËØ£¬±ãÓÚºóÃæ¸øĞÂÈëÈ¦µÄÖí±àºÅ
 Pig* findlast(Pig* t)
 {
-    while(t->next != nullptr) t=t->next ;   //tµÄÏÂÒ»¸ö½Úµã²»Îªnullptr£¬Ôò½«pÖ¸Ïònext£¬Ö±µ½×îºóÒ»¸ö½Úµã
-    return t;
+	while (t->next != nullptr) t = t->next;   //tµÄÏÂÒ»¸ö½Úµã²»Îªnullptr£¬Ôò½«pÖ¸Ïònext£¬Ö±µ½×îºóÒ»¸ö½Úµã
+	return t;
 }
 
 //°ÑÖí¾ùÔÈ·ÅÈëÖíÈ¦µÄº¯Êı
 bool putin(Pig* t)
 {
-    int min = 11;                            //min ±íÊ¾Öí×îÉÙµÄÖíÈ¦ÖĞÖíµÄÊıÁ¿ £¨0~10£©
-    int minnumber = 0;                    //minnumber ±íÊ¾Öí×îÉÙµÄÖíÈ¦µÄ±àºÅ£¨0~99£©
-    for (int i = 0; i <= 99; i++)
-    {
-        if (numbers[i] == 0)                //ÖíÈ¦ÀïÃ»ÓĞÖí
-        {
-            min = 0;                        //¼ÇÂ¼ÏÖÔÚµÄ×îĞ¡ÖµÎª0
-            minnumber = i;                //¼ÇÂ¼×îĞ¡ÖµµÄÖíÈ¦±àºÅÎªi
-            break;                        //Ìø³öÑ­»·
-        }
-        if (numbers[i] < min && judgeput(t->colour, type[i]))//Èç¹ûÃ¿¸öÖíÈ¦¶¼ÓĞÖí £¬ÅĞ¶ÏÖíÀàĞÍ
-        {
-            min = numbers[i];                //¼ÇÂ¼ÏÖÔÚµÄ×îĞ¡ÖµÎªnumbers[i]
-            minnumber = i;                //¼ÇÂ¼×îĞ¡ÖµµÄÖíÈ¦±àºÅÎªi
-        }
-    }
-    if (min >= 10) return false;            //±éÀúÒ»±éÖíÈ¦ºó£¬ÕÒ²»µ½ÄÜ·ÅĞÂÖíáÌµÄÖíÈ¦
-    if (min == 0)
-    {
-        t->number = 1;
-        pigfarm[minnumber] = t;            //tÖ¸ÏòiºÅÖíÈ¦µÄµÚÒ»¸öÎ»ÖÃ                  //µÚÒ»Í·Öí·ÅÔÚiºÅÖíÈ¦µÄ1ºÅÎ»ÖÃ£¬ÖíµÄ±àºÅÎª1
-        type[minnumber] = t->colour;    //ÖíÈ¦µÄÀàĞÍ¸ÄÎªÖíµÄÀàĞÍ
-        numbers[minnumber]++;            //¼ÇÂ¼ÖíÈ¦ÖĞÖíµÄ×ÜÊıµÄnumbers++
-        return true;                    //Õâ´Îputin½áÊø£¬·µ»ØÒ»¸ötrue£¬±íÊ¾³É¹¦·ÅÈëÖíáÌ
-    }
-    else if (min < 10 && min>0)
-    {
-        Pig* temp = pigfarm[minnumber];    //tempÖ¸ÏòµÚi¸öÖíÈ¦µÄµÚÒ»¸öÎ»ÖÃ
-        Pig* s;
-        s = findlast(temp);                //ÓÃfindlast£¬ÕÒµ½ÖíÈ¦µÄ×îºóÒ»Í·Öí
-        s->next = t;                    //½«ĞÂÖíáÌ·ÅÈë×îºóÒ»Í·ÖíµÄºóÃæÎ»ÖÃ
-        t->number = s->number + 1;        //ĞÂÖíáÌµÄ±àºÅÎªÔ­×îºóÒ»Í·ÖíµÄ±àºÅ+1
-        numbers[minnumber]++;            //Í³¼ÆiºÅÖíÈ¦ÖĞÖíµÄ×ÜÊı++
-        return true;                    //Õâ´Îputin½áÊø£¬·µ»ØÒ»¸ötrue£¬±íÊ¾³É¹¦·ÅÈëÖíáÌ
-    }
-    return false;
+	int min = 11;                            //min ±íÊ¾Öí×îÉÙµÄÖíÈ¦ÖĞÖíµÄÊıÁ¿ £¨0~10£©
+	int minnumber = 0;                    //minnumber ±íÊ¾Öí×îÉÙµÄÖíÈ¦µÄ±àºÅ£¨0~99£©
+	for (int i = 0; i <= 99; i++)
+	{
+		if (numbers[i] == 0)                //ÖíÈ¦ÀïÃ»ÓĞÖí
+		{
+			min = 0;                        //¼ÇÂ¼ÏÖÔÚµÄ×îĞ¡ÖµÎª0
+			minnumber = i;                //¼ÇÂ¼×îĞ¡ÖµµÄÖíÈ¦±àºÅÎªi
+			break;                        //Ìø³öÑ­»·
+		}
+		if (numbers[i] < min && judgeput(t->colour, type[i]))//Èç¹ûÃ¿¸öÖíÈ¦¶¼ÓĞÖí £¬ÅĞ¶ÏÖíÀàĞÍ
+		{
+			min = numbers[i];                //¼ÇÂ¼ÏÖÔÚµÄ×îĞ¡ÖµÎªnumbers[i]
+			minnumber = i;                //¼ÇÂ¼×îĞ¡ÖµµÄÖíÈ¦±àºÅÎªi
+		}
+	}
+	if (min >= 10) return false;            //±éÀúÒ»±éÖíÈ¦ºó£¬ÕÒ²»µ½ÄÜ·ÅĞÂÖíáÌµÄÖíÈ¦
+	if (min == 0)
+	{
+		t->number = 1;
+		pigfarm[minnumber] = t;            //tÖ¸ÏòiºÅÖíÈ¦µÄµÚÒ»¸öÎ»ÖÃ                  //µÚÒ»Í·Öí·ÅÔÚiºÅÖíÈ¦µÄ1ºÅÎ»ÖÃ£¬ÖíµÄ±àºÅÎª1
+		type[minnumber] = t->colour;    //ÖíÈ¦µÄÀàĞÍ¸ÄÎªÖíµÄÀàĞÍ
+		numbers[minnumber]++;            //¼ÇÂ¼ÖíÈ¦ÖĞÖíµÄ×ÜÊıµÄnumbers++
+		return true;                    //Õâ´Îputin½áÊø£¬·µ»ØÒ»¸ötrue£¬±íÊ¾³É¹¦·ÅÈëÖíáÌ
+	}
+	else if (min < 10 && min>0)
+	{
+		Pig* temp = pigfarm[minnumber];    //tempÖ¸ÏòµÚi¸öÖíÈ¦µÄµÚÒ»¸öÎ»ÖÃ
+		Pig* s;
+		s = findlast(temp);                //ÓÃfindlast£¬ÕÒµ½ÖíÈ¦µÄ×îºóÒ»Í·Öí
+		s->next = t;                    //½«ĞÂÖíáÌ·ÅÈë×îºóÒ»Í·ÖíµÄºóÃæÎ»ÖÃ
+		t->number = s->number + 1;        //ĞÂÖíáÌµÄ±àºÅÎªÔ­×îºóÒ»Í·ÖíµÄ±àºÅ+1
+		numbers[minnumber]++;            //Í³¼ÆiºÅÖíÈ¦ÖĞÖíµÄ×ÜÊı++
+		return true;                    //Õâ´Îputin½áÊø£¬·µ»ØÒ»¸ötrue£¬±íÊ¾³É¹¦·ÅÈëÖíáÌ
+	}
+	return false;
 }
 
 //ÖíµÄÌåÖØÔö³¤ºÍËÇÑøÊ±³¤Ôö³¤º¯Êı
 void gainweight()
 {
-    for (int i = 0; i <= 99; i++)
-    {
-        Pig* t = pigfarm[i];                    //tÖ¸ÏòpigfarmµÄµÚÒ»Í·Öí
-        while(t != nullptr)           //tÊÇ×îºóÒ»Í·ÖíµÄnextÊ±Ìø³öÑ­»·
-        {
-            t->weight += (random(12)) / 10.0;    //ÌåÖØµÄÔö³¤ÓÃËæ»úÊıÉú³É
-            t->life++;                        //ËÇÑøÊ±³¤+1Ìì
-            t = t->next ;
-        }
-    }
+	for (int i = 0; i <= 99; i++)
+	{
+		Pig* t = pigfarm[i];                    //tÖ¸ÏòpigfarmµÄµÚÒ»Í·Öí
+		while (t != nullptr)           //tÊÇ×îºóÒ»Í·ÖíµÄnextÊ±Ìø³öÑ­»·
+		{
+			t->weight += (random(12)) / 10.0;    //ÌåÖØµÄÔö³¤ÓÃËæ»úÊıÉú³É
+			t->life++;                        //ËÇÑøÊ±³¤+1Ìì
+			t = t->next;
+		}
+	}
 }
 
 //ÅĞ¶ÏÖíµÄÌåÖØ»òËÇÑøÊ±³¤Âú²»Âú×ãÒªÇó£¬ÄÜ²»ÄÜ³öÈ¦
 bool sellable(Pig* t)
 {
-    if (t->weight > 75 || t->life > 365) return true;//ËÇÑø³¬¹ı90Ìì»òÌåÖØ³¬¹ı150kg±ã¿ÉÒÔ³öÊÛ
-    return false;
+	if (t->weight > 75 || t->life > 365) return true;//ËÇÑø³¬¹ı90Ìì»òÌåÖØ³¬¹ı150kg±ã¿ÉÒÔ³öÊÛ
+	return false;
 }
 
 //¼ÆËãÂô³öµÄÖíµÄ¼ÛÇ®price
 double price(Pig* t)
 {
-    double sum_price = 0;                            //³õÊ¼»¯sum_priceÎª0
-    if (t->colour == 1) sum_price += t->weight * 30;//µ±tÖ¸ÏòµÄÊÇºÚÖíÊ±£¬sum_price=ÌåÖØ*µ¥¼Û
-    if (t->colour == 2) sum_price += t->weight * 14;//µ±tÖ¸ÏòµÄÊÇĞ¡»¨ÖíÊ±£¬sum_price=ÌåÖØ*µ¥¼Û
-    if (t->colour == 3) sum_price += t->weight * 12;//µ±tÖ¸ÏòµÄÊÇ´ó°×»¨ÖíÊ±£¬sum_price=ÌåÖØ*µ¥¼Û
-    return sum_price;
+	double sum_price = 0;                            //³õÊ¼»¯sum_priceÎª0
+	if (t->colour == 1) sum_price += t->weight * 30;//µ±tÖ¸ÏòµÄÊÇºÚÖíÊ±£¬sum_price=ÌåÖØ*µ¥¼Û
+	if (t->colour == 2) sum_price += t->weight * 14;//µ±tÖ¸ÏòµÄÊÇĞ¡»¨ÖíÊ±£¬sum_price=ÌåÖØ*µ¥¼Û
+	if (t->colour == 3) sum_price += t->weight * 12;//µ±tÖ¸ÏòµÄÊÇ´ó°×»¨ÖíÊ±£¬sum_price=ÌåÖØ*µ¥¼Û
+	return sum_price;
 }
 
 
 double  sellout(void)
 {
-    double sum = 0;                                        //sum¼ÇÂ¼±¾´Î³öÈ¦µÄ×Ü¼Û¸ñ
-    for (int i = 0; i <= 99; i++)                        //±éÀúÖíÈ¦
-    {
-        Pig* prev, * t;                                    //¶¨ÒåÁ½¸öPigÖ¸Õë£¬ÓÃÓÚºóÃæÖíµÄ³öÈ¦£¨½ÚµãÉ¾³ı£©
-        if (numbers[i] == 0) continue;                        //µÚi¸öÖíÈ¦Ã»Öí£¬continue£¬ÏÂÒ»¸öÖíÈ¦
-        while (pigfarm[i] != nullptr && sellable(pigfarm[i]))                           
-		//µÚi¸öÖíÈ¦ÓĞÖíµÄÇé¿öÏÂ£¬ÅĞ¶ÏµÚÒ»Í·ÖíÂú²»Âú×ãÂô³öÌõ¼ş£¬×¼±¸Âô³ö
-        {
-            sum += price(pigfarm[i]);                        //Âú×ãÂô³öÌõ¼ş£¬¼ÆËã¸ÃÖíµÄµ¥¼Û
-            Pig* temp = pigfarm[i];
-            pigfarm[i] = pigfarm[i]->next;
-            delete temp;
-            temp = nullptr;
-            numbers[i]--;                            //ÖíÈ¦ÖĞÖíµÄ×ÜÊı-1
-        }
+	double sum = 0;                                        //sum¼ÇÂ¼±¾´Î³öÈ¦µÄ×Ü¼Û¸ñ
+	for (int i = 0; i <= 99; i++)                        //±éÀúÖíÈ¦
+	{
+		Pig* prev, * t;                                    //¶¨ÒåÁ½¸öPigÖ¸Õë£¬ÓÃÓÚºóÃæÖíµÄ³öÈ¦£¨½ÚµãÉ¾³ı£©
+		if (numbers[i] == 0) continue;                        //µÚi¸öÖíÈ¦Ã»Öí£¬continue£¬ÏÂÒ»¸öÖíÈ¦
+		while (pigfarm[i] != nullptr && sellable(pigfarm[i]))
+			//µÚi¸öÖíÈ¦ÓĞÖíµÄÇé¿öÏÂ£¬ÅĞ¶ÏµÚÒ»Í·ÖíÂú²»Âú×ãÂô³öÌõ¼ş£¬×¼±¸Âô³ö
+		{
+			sum += price(pigfarm[i]);                        //Âú×ãÂô³öÌõ¼ş£¬¼ÆËã¸ÃÖíµÄµ¥¼Û
+			Pig* temp = pigfarm[i];
+			pigfarm[i] = pigfarm[i]->next;
+			delete temp;
+			temp = nullptr;
+			numbers[i]--;                            //ÖíÈ¦ÖĞÖíµÄ×ÜÊı-1
+		}
 
-        if (pigfarm[i] == nullptr) {
-            numbers[i] = 0;
-            continue;
-        }                        //ÖíÈ¦ÖĞÖ»Ê£ÏÂÁËÒ»Í·ÎŞ·¨Âô³öµÄÖí£¬continue£¬ÏÂÒ»¸öÖíÈ¦
-        pigfarm[i]->number = 1;
-        if (pigfarm[i]->next == nullptr) continue;
-        t = pigfarm[i];
-        prev = t;
-        t = t->next;
-        t->number = prev->number + 1;
-        if (t == nullptr) continue;
-        while (t->next != nullptr)
-        {
-            if (sellable(t))
-            {
-                prev->next = t->next;
-                sum += price(t);
-                delete t;
-                t = prev->next;
-                t->number = prev->number + 1;
-            }
-            else
-            {
-                prev = t;
-                t = t->next;
-                t->number = prev->number + 1;
-            }
-            if (t->next == nullptr && sellable(t))
-            {
-                sum += price(t);
-                prev->next = nullptr;
-                delete t;
-                numbers[i]--;
-            }
-        }
-    }
-    return sum;
+		if (pigfarm[i] == nullptr) {
+			numbers[i] = 0;
+			continue;
+		}                        //ÖíÈ¦ÖĞÖ»Ê£ÏÂÁËÒ»Í·ÎŞ·¨Âô³öµÄÖí£¬continue£¬ÏÂÒ»¸öÖíÈ¦
+		pigfarm[i]->number = 1;
+		if (pigfarm[i]->next == nullptr) continue;
+		t = pigfarm[i];
+		prev = t;
+		t = t->next;
+		if (nullptr == prev->next) continue;
+		t = prev->next;
+		t->number = prev->number + 1;
+		while ((t != nullptr)&&(nullptr != t->next))
+		{
+			if (sellable(t))
+			{
+				prev->next = t->next;
+				sum += price(t);
+				delete t;
+				t = prev->next;
+				t->number = prev->number + 1;
+			}
+			else
+			{
+				prev = t;
+				t = t->next;
+				t->number = prev->number + 1;
+			}
+			if (t->next == nullptr && sellable(t))
+			{
+				sum += price(t);
+				prev->next = nullptr;
+				delete t;
+				t = nullptr;
+				numbers[i]--;
+			}
+		}
+	}
+	return sum;
+}
+//ÅĞ¶ÏÖíÈ¦ÖĞµÄÖíÓĞÃ»ÓĞËÀ¹â 
+bool alldie()
+{
+	for (int i = 0; i <= 99; i++)
+	{
+		for (Pig* s = pigfarm[i]; s != nullptr; s = s->next)
+		{
+			if (s->sick == false) return false;
+		}
+	}
+	return true;
 }
 
 int main()
 {
-    srand((unsigned)time(NULL));                    //ÓÃtimeº¯Êı¸Ä±äËæ»úÊıÖÖ×Ó£¬ÊµÏÖÕæËæ»ú
-    int initialization_1 = random(500);        //ÀûÓÃËæ»úÊıµÄ·½·¨³õÊ¼»¯µÚÒ»ÅúÓ×áÌµÄÊıÁ¿
-    for (int i = 0; i <= initialization_1; i++)
-    {
-        Pig* t = new Pig(0, random(3) + 1, 0, ((double)random(300) + 200.0) / 10.0, false);
-        //³õÊ¼»¯µÚÒ»ÅúÓ×áÌµÄĞÅÏ¢ £¬±àºÅ¶¼ºÍËÇÑøÊ±³¤¶¼³õÊ¼»¯Îª0£¬ºóÃæµÄº¯Êı»á±àºÅºÍ¸Ä±äËÇÑøÊ±³¤£¬ÖíµÄÆ·ÖÖºÍÌåÖØ¶¼ÓÃËæ»úÊıÉú³É
-        putin(t);
-    }
-    int days = 0;
-    while (days != 181)					//ÎåÄê 
-    {
-        days++;
-        gainweight();
-        //Ã¿Ìì¶¼Òª¸øÖíÔö³¤ÌåÖØºÍËÇÑøÊ±³¤
-        if (days % 90 == 0)                    //90Ìì³öÈ¦Ò»ÅúÖí
-        {
-            cout << "±¾´Î³öÈ¦µÄÖí×ÜÌåÊÛ¼Û" << sellout() << endl;
-            int initialization_2 = random(500);//ÂôÍêºóËæ»úÉú³ÉĞÂµÄÖíáÌ
-        	cout<<endl;
-            for (int i = 0; i <= initialization_2; i++)
-            {
-                Pig* t = new Pig(0, random(3) + 1, 0, ((double)random(300) + 200.0) / 10.0, false);//³õÊ¼»¯ÖíáÌµÄĞÅÏ¢
-                if (putin(t) == false) break;    //Ö´ĞĞÅĞ¶Ïº¯Êıputin£¬²¢½«ÖíáÌ·ÅÈë
-            }
-            cout<<"·ÅÈëÖíáÌºó¸÷ÖíÈ¦ÖĞÖíµÄÊıÁ¿£º"<<endl; 
-			for(int i=0;i<=99;i++) cout<<numbers[i]<<" ";
-			cout<<endl<<endl; 
-        }
-    }
-		
+	srand((unsigned)time(NULL));                    //ÓÃtimeº¯Êı¸Ä±äËæ»úÊıÖÖ×Ó£¬ÊµÏÖÕæËæ»ú
+	int initialization_1 = random(500);        //ÀûÓÃËæ»úÊıµÄ·½·¨³õÊ¼»¯µÚÒ»ÅúÓ×áÌµÄÊıÁ¿
+
+	ofstream s_save;
+	s_save.open("buyrecord.txt", ofstream::app);//ofstream£º£ºappÊÇÎªÁË·ÀÖ¹ºóÃæµÄÊı¾İ¸²¸ÇÇ°ÃæµÄÊı¾İ 
+
+	int hei = 0, hua = 0, bai = 0;
+	for (int i = 0; i <= initialization_1; i++)
+	{
+		Pig* t = new Pig(0, random(3) + 1, 0, ((double)random(300) + 200.0) / 10.0, false);
+		//³õÊ¼»¯µÚÒ»ÅúÓ×áÌµÄĞÅÏ¢ £¬±àºÅ¶¼ºÍËÇÑøÊ±³¤¶¼³õÊ¼»¯Îª0£¬ºóÃæµÄº¯Êı»á±àºÅºÍ¸Ä±äËÇÑøÊ±³¤£¬ÖíµÄÆ·ÖÖºÍÌåÖØ¶¼ÓÃËæ»úÊıÉú³É
+		if (t->colour == 1) hei++;
+		if (t->colour == 2) hua++;
+		if (t->colour == 3) bai++;
+		putin(t);
+	}
+
+	s_save << "¿ªÊ¼ÓÎÏ·µÚÒ»´Î¹ºÈë:" << hei << "Í·ºÚÖí " << hua << "Í·Ğ¡»¨Öí " << bai << "Í·´ó°×»¨Öí" << endl;
+	s_save.close();//Ã¿´Î´æµµÖ®ºóÒª¹Ø±Õ 
+
+//Ö®ºó¼Ó¸²¸Ç´æµµµÄÅĞ¶ÏÌõ¼ş
+/*	
+	s_save.open("buyrecord.txt");
+	s_save << " ";//¸²¸ÇÖ®Ç°´æµµ	
+*/
+
+	int days = 0;
+	while (days != 1830)					//ÎåÄê 
+	{
+		days++;
+		gainweight();
+		//Ã¿Ìì¶¼Òª¸øÖíÔö³¤ÌåÖØºÍËÇÑøÊ±³¤
+		if (days % 90 == 0)                    //90Ìì³öÈ¦Ò»ÅúÖí
+		{
+			int sell_1 = 0;
+			sell_1 = sellout();
+
+			ofstream t_save;
+			t_save.open("sellrecord.txt", ofstream::app);//ofstream£º£ºappÊÇÎªÁË·ÀÖ¹ºóÃæµÄÊı¾İ¸²¸ÇÇ°ÃæµÄÊı¾İ 
+			t_save << "±¾´Î³öÈ¦µÄÖí×ÜÌåÊÛ¼Û" << sell_1 << endl;
+			t_save.close();
+
+			/*
+				t_save.open("sellrecord.txt");
+				t_save << " ";//¸²¸ÇÖ®Ç°´æµµ
+			*/
+
+			cout << "±¾´Î³öÈ¦µÄÖí×ÜÌåÊÛ¼Û" << sell_1 << endl;
+			int initialization_2 = random(500);//ÂôÍêºóËæ»úÉú³ÉĞÂµÄÖíáÌ
+			cout << endl;
+			hei = 0, hua = 0, bai = 0;
+			for (int i = 0; i <= initialization_2; i++)
+			{
+				Pig* t = new Pig(0, random(3) + 1, 0, ((double)random(300) + 200.0) / 10.0, false);//³õÊ¼»¯ÖíáÌµÄĞÅÏ¢
+				if (t->colour == 1) hei++;
+				if (t->colour == 2) hua++;
+				if (t->colour == 3) bai++;
+				if (putin(t) == false) break;    //Ö´ĞĞÅĞ¶Ïº¯Êıputin£¬²¢½«ÖíáÌ·ÅÈë
+			}
+			ofstream s_save;
+			s_save.open("buyrecord.txt", ofstream::app);//ofstream£º£ºappÊÇÎªÁË·ÀÖ¹ºóÃæµÄÊı¾İ¸²¸ÇÇ°ÃæµÄÊı¾İ 
+			s_save << "±¾´Î¹ºÈë:" << hei << "Í·ºÚÖí " << hua << "Í·Ğ¡»¨Öí " << bai << "Í·´ó°×»¨Öí" << endl;
+			s_save.close();//Ã¿´Î´æµµÖ®ºóÒª¹Ø±Õ 
+
+			cout << "·ÅÈëÖíáÌºó¸÷ÖíÈ¦ÖĞÖíµÄÊıÁ¿£º" << endl;
+			for (int i = 0; i <= 99; i++) cout << numbers[i] << " ";
+			cout << endl << endl;
+		}
+	}
+	//±£´æµ±Ç°ÑøÖí³¡µÄĞÅÏ¢
+	for (int i = 0; i <= 99; i++)
+	{
+		ofstream s;
+		s.open("pig_information.txt", ofstream::app);//ofstream£º£ºappÊÇÎªÁË·ÀÖ¹ºóÃæµÄÊı¾İ¸²¸ÇÇ°ÃæµÄÊı¾İ 
+		s << "µÚ" << i << "¸öÑøÖí³¡µÄĞÅÏ¢£º" << endl;
+		for (Pig* t = pigfarm[i]; t != nullptr; t = t->next)
+		{
+			s << "ÖíµÄ±àºÅÊÇ:" << t->number << "	" << "ÖíµÄÌåÖØÊÇ" << t->weight << "	" << "ÖíµÄËÇÑøÊ±³¤ÊÇ" << t->life << "Ìì" << endl;
+		}
+		s.close();//Ã¿´Î´æµµÖ®ºóÒª¹Ø±Õ
+
+		/*
+			s.open("pig_information.txt");
+			s << " ";//¸²¸ÇÖ®Ç°´æµµ
+		*/
+	}
+	
+	
+
 	//²éÑ¯ÌØ¶¨ÖíÈ¦µÄÖíµÄÖÖÀàºÍÊıÁ¿
-    Pig* t;
-    int x;
-    int a[3]={0};
-    cout <<endl<< "ÊäÈëÄãÒª²éÑ¯µÄÖíÈ¦±àºÅ:";
-    cin >> x;                                    //xÎªÄãÒª²éÑ¯µÄÖíÈ¦±àºÅ
-    t = pigfarm[x];
-    for (; t != nullptr; t = t->next)
-    {
-		if(t->colour ==1) a[0]++;
-		if(t->colour ==2) a[1]++;
-		if(t->colour ==3) a[2]++;
-    }
-    t=nullptr;
-    cout << "µÚ"<<x<<"¸öÖíÈ¦ÖĞÖíµÄÖÖÀà  ºÚÖí : "<<a[0]<<" »¨Öí £º"<<a[1]<<" ´ó°×»¨Öí : "<<a[2]; 
-    
-    // ²éÑ¯µ±Ç°Ä³Ò»¸öÖíÈ¦ÖĞÄ³Í·ÖíµÄÇé¿ö 
-    cout<<endl<<"ÊäÈëÄãÒª²éÑ¯µÄÖíµÄ±àºÅ£º";
-    int no_pig;
-	cin>>no_pig;
-	t=pigfarm[x];
-	if(no_pig>numbers[x]) cout<<"ÖíÈ¦ÄÚÃ»ÓĞÕâÍ·Öí"<<endl;
+	Pig* t;
+	int x;
+	int a[3] = { 0 };
+	cout << endl << "ÊäÈëÄãÒª²éÑ¯µÄÖíÈ¦±àºÅ:";
+	cin >> x;                                    //xÎªÄãÒª²éÑ¯µÄÖíÈ¦±àºÅ
+	t = pigfarm[x];
+	for (; t != nullptr; t = t->next)
+	{
+		if (t->colour == 1) a[0]++;
+		if (t->colour == 2) a[1]++;
+		if (t->colour == 3) a[2]++;
+	}
+	t = nullptr;
+	cout << "µÚ" << x << "¸öÖíÈ¦ÖĞÖíµÄÖÖÀà  ºÚÖí : " << a[0] << " »¨Öí £º" << a[1] << " ´ó°×»¨Öí : " << a[2];
+
+	// ²éÑ¯µ±Ç°Ä³Ò»¸öÖíÈ¦ÖĞÄ³Í·ÖíµÄÇé¿ö 
+	cout << endl << "ÊäÈëÄãÒª²éÑ¯µÄÖíµÄ±àºÅ£º";
+	int no_pig;
+	cin >> no_pig;
+	t = pigfarm[x];
+	if (no_pig > numbers[x] || no_pig <= 0) cout << "ÖíÈ¦ÄÚÃ»ÓĞÕâÍ·Öí" << endl;
 	else
 	{
 		int flag(1);
-		for(;t!=nullptr;t=t->next )
+		for (; t != nullptr; t = t->next)
 		{
-			if(flag==no_pig)
+			if (flag == no_pig)
 			{
-				if(t->colour ==1) cout<<"ÖíµÄÖÖÀàÎªºÚÖí"<<endl;
-				else if(t->colour ==2) cout<<"ÖíµÄÖÖÀàÎª°×Öí"<<endl;
-				else if(t->colour ==3) cout<<"ÖíµÄÖÖÀàÎª´ó°×»¨Öí"<<endl;
-				cout<<"ÖíµÄËÇÑøÊ±³¤Îª"<<t->life<<"Ìì"<<endl;
-				cout<<"ÖíµÄÌåÖØÎª"<<t->weight<<"Ç§¿Ë"<<endl;; 
+				if (t->colour == 1) cout << "ÖíµÄÖÖÀàÎªºÚÖí" << endl;
+				else if (t->colour == 2) cout << "ÖíµÄÖÖÀàÎª°×Öí" << endl;
+				else if (t->colour == 3) cout << "ÖíµÄÖÖÀàÎª´ó°×»¨Öí" << endl;
+				cout << "ÖíµÄËÇÑøÊ±³¤Îª" << t->life << "Ìì" << endl;
+				cout << "ÖíµÄÌåÖØÎª" << t->weight << "Ç§¿Ë" << endl;;
 			}
 			flag++;
 		}
-		t=nullptr;
+		t = nullptr;
 	}
-	
+
 	//Í³¼Æµ±Ç°ÖíÈ¦Ã¿¸öÖÖÀàÖíµÄÊıÁ¿£¬ÌåÖØ£¬ËÇÑøÊ±¼ä·Ö²¼Çé¿ö
-	int number_pigs[3]={0};
-	int sum_pigs=0;
-	double weight_pigs[3]={0};
-	int life_pigs1[3]={0};				//0~90ÌìµÄÖí
-	int life_pigs3[3]={0};				//90ÒÔÉÏµÄÖí 
-	for(int i=0;i<=99;i++)
+	int number_pigs[3] = { 0 };
+	int sum_pigs = 0;
+	double weight_pigs[3] = { 0 };
+	int life_pigs1[3] = { 0 };				//0~90ÌìµÄÖí
+	int life_pigs3[3] = { 0 };				//90ÒÔÉÏµÄÖí 
+	for (int i = 0; i <= 99; i++)
 	{
-		t=pigfarm[i];
-		for(;t!=nullptr;t=t->next )
+		t = pigfarm[i];
+		for (; t != nullptr; t = t->next)
 		{
-			if(t->colour ==1)
+			if (t->colour == 1)
 			{
 				number_pigs[0]++;
-				weight_pigs[0]+=t->weight ;
-				if(t->life <90) life_pigs1[0]++;
-				else if(t->life>=90) life_pigs3[0]++;
+				weight_pigs[0] += t->weight;
+				if (t->life < 90) life_pigs1[0]++;
+				else if (t->life >= 90) life_pigs3[0]++;
 			}
-			else if(t->colour ==2)
+			else if (t->colour == 2)
 			{
 				number_pigs[1]++;
-				weight_pigs[1]+=t->weight ;
-				if(t->life <90) life_pigs1[1]++;
-				else if(t->life>=90) life_pigs3[1]++;
+				weight_pigs[1] += t->weight;
+				if (t->life < 90) life_pigs1[1]++;
+				else if (t->life >= 90) life_pigs3[1]++;
 			}
-			else if(t->colour ==3)
+			else if (t->colour == 3)
 			{
 				number_pigs[2]++;
-				weight_pigs[2]+=t->weight ;
-				if(t->life <90) life_pigs1[2]++;
-				else if(t->life>=90) life_pigs3[2]++;
+				weight_pigs[2] += t->weight;
+				if (t->life < 90) life_pigs1[2]++;
+				else if (t->life >= 90) life_pigs3[2]++;
 			}
 		}
 	}
-	t=nullptr;
-	sum_pigs=number_pigs[0]+number_pigs[1]+number_pigs[2];
-	cout<<"ºÚÖíµÄ×ÜÊıÁ¿Îª£º"<<number_pigs[0]<<"Í·"<<endl;
-	cout<<"»¨ÖíµÄ×ÜÊıÁ¿Îª£º"<<number_pigs[1]<<"Í·"<<endl;
-	cout<<"´ó°×»¨ÖíµÄ×ÜÊıÁ¿Îª£º"<<number_pigs[2]<<"Í·"<<endl;
-	cout<<"ºÚÖíµÄ×ÜÌåÖØÎª£º"<<weight_pigs[0]<<"kg"<<endl;
-	cout<<" »¨ÖíµÄ×ÜÌåÖØÎª£º"<<weight_pigs[1]<<"kg"<<endl;
-	cout<<"´ó°×»¨ÖíµÄ×ÜÌåÖØÎª£º"<<weight_pigs[2]<<"kg"<<endl;
-	cout<<"ºÚÖíËÇÑøÊ±³¤0~90ÌìÓĞ£º"<<life_pigs1[0]<<"Í·"<<endl;
-	cout<<"ºÚÖíËÇÑøÊ±³¤90ÌìÒÔÉÏÓĞ£º"<<life_pigs3[0]<<"Í·"<<endl;
-	cout<<"»¨ÖíËÇÑøÊ±³¤0~90ÌìÓĞ£º"<<life_pigs1[1]<<"Í·"<<endl;
-	cout<<"»¨ÖíËÇÑøÊ±³¤90ÌìÒÔÉÏÓĞ£º"<<life_pigs3[1]<<"Í·"<<endl;
-	cout<<"´ó°×»¨ÖíÖíËÇÑøÊ±³¤0~90ÌìÓĞ£º"<<life_pigs1[2]<<"Í·"<<endl;
-	cout<<"´ó°×»¨ÖíËÇÑøÊ±³¤90ÌìÒÔÉÏÓĞ£º"<<life_pigs3[2]<<"Í·"<<endl;
-	
+	t = nullptr;
+	sum_pigs = number_pigs[0] + number_pigs[1] + number_pigs[2];
+	cout << "ºÚÖíµÄ×ÜÊıÁ¿Îª£º" << number_pigs[0] << "Í·" << endl;
+	cout << "»¨ÖíµÄ×ÜÊıÁ¿Îª£º" << number_pigs[1] << "Í·" << endl;
+	cout << "´ó°×»¨ÖíµÄ×ÜÊıÁ¿Îª£º" << number_pigs[2] << "Í·" << endl;
+	cout << "ºÚÖíµÄ×ÜÌåÖØÎª£º" << weight_pigs[0] << "kg" << endl;
+	cout << " »¨ÖíµÄ×ÜÌåÖØÎª£º" << weight_pigs[1] << "kg" << endl;
+	cout << "´ó°×»¨ÖíµÄ×ÜÌåÖØÎª£º" << weight_pigs[2] << "kg" << endl;
+	cout << "ºÚÖíËÇÑøÊ±³¤0~90ÌìÓĞ£º" << life_pigs1[0] << "Í·" << endl;
+	cout << "ºÚÖíËÇÑøÊ±³¤90ÌìÒÔÉÏÓĞ£º" << life_pigs3[0] << "Í·" << endl;
+	cout << "»¨ÖíËÇÑøÊ±³¤0~90ÌìÓĞ£º" << life_pigs1[1] << "Í·" << endl;
+	cout << "»¨ÖíËÇÑøÊ±³¤90ÌìÒÔÉÏÓĞ£º" << life_pigs3[1] << "Í·" << endl;
+	cout << "´ó°×»¨ÖíÖíËÇÑøÊ±³¤0~90ÌìÓĞ£º" << life_pigs1[2] << "Í·" << endl;
+	cout << "´ó°×»¨ÖíËÇÑøÊ±³¤90ÌìÒÔÉÏÓĞ£º" << life_pigs3[2] << "Í·" << endl;
+
+/*
 	//Ä£ÄâÑøÖí³¡Ä³Ò»Ö»ÖíµÃÁËÖíÎÁ
 	bool pigfarm_sick[100];
-	memset(pigfarm_sick,false,sizeof(bool)*100);	//boolÊı×éÃ¿¸ö¶¼ÖÃfalse£¬±íÊ¾ÏÖÔÚ»¹Ã»ÓĞÖíÉú²¡ 
-	int randill_1=random(100);
-	while(numbers[ranill_1]==0) randill_1=random(100);
-	int randill_2=random(numbers[randil_1]),sickday=0;
+	memset(pigfarm_sick, false, sizeof(bool) * 100);	//boolÊı×éÃ¿¸ö¶¼ÖÃfalse£¬±íÊ¾ÏÖÔÚ»¹Ã»ÓĞÖíÉú²¡ 
+	int randill_1 = random(100);
+	while (numbers[randill_1] == 0) randill_1 = random(100);
+	int randill_2 = random(numbers[randill_1]), sickday = 0;
 	//Ëæ»úÉú³ÉÒ»¸öÉú²¡µÄÖíÈ¦,±àºÅÎªrandill_1,Ëæ»úÉú³ÉÒ»¸öÉú²¡µÄÖí£¬¸ÃÖíÊÇÖíÈ¦ÖĞµÚrandill_2Í·Öí
-	pigfarm_sick[randill]=true;
-	int flag_sick=0;
-	int sum_sickpigs=0;
-	
+	pigfarm_sick[randill_1] = true;
+	int flag_sick = 0;
+	int sum_sickpigs = 0;
 	//±àºÅÎªrandill_2ºÅµÄÖí¸ĞÈ¾ÉÏÖíÎÁ 
-	for(t=pigfarm[randill_1];t!=nullptr;t=t->next )
+	for (t = pigfarm[randill_1]; t != nullptr; t = t->next)
 	{
-		if(randill_2==0)
+		if (randill_2 == 0)
 		{
-			t->sick =true;
+			t->sick = true;
 			sum_sickpigs++;
 			break;
 		}
 		else
 		{
-			t=t->next;
+			t = t->next;
 			flag_sick++;
-			if(flag_sick==randill_2)
+			if (flag_sick == randill_2)
 			{
-				t->sick =true;
+				t->sick = true;
 				sum_sickpigs++;
 				break;
 			}
 		}
 	}
-	t=nullptr;
+	t = nullptr;
 	
-	//¿ªÊ¼´«²¥ÎÁÒß 
-	int sickfarm_no[100];//ÓÃÓÚ¼ÇÂ¼ÏÂÓĞÎÁÒß´æÔÚµÄÖíÈ¦£¬·½±ãÖ®ºó±éÀú 
-	memset(sickfarm_no,-1,sizeof(int)*100);
-	sickfarm_n0[0]=randill_1;//randill_1ÒÑ¾­³öÏÖÁËÖíÎÁ
-	while(sum_sickpigs!=sum_pigs)
+
+	//¿ªÊ¼´«²¥ÎÁÒß
+	int sickfarm_no[100];//ÓÃÓÚ¼ÇÂ¼ÏÂÓĞÎÁÒß´æÔÚµÄÖíÈ¦µÄ±àºÅ£¬·½±ãÖ®ºó±éÀú 
+	memset(sickfarm_no, -1, sizeof(int) * 100);
+	sickfarm_no[0] = randill_1;//randill_1ÒÑ¾­³öÏÖÁËÖíÎÁ
+	while (alldie() != true)
 	{
-		days++; 
+		days++;
 		//±éÀúsickfarm_no£¬Ö±µ½ÖíÈ¦ÖĞËùÓĞµÄÖí¶¼µÃÉÏÁËÖíÎÁ 
-		for(int i=0;sickfarm_no[i]!=-1;i++)
+		for (int i = 0; sickfarm_no[i] != -1; i++)
 		{
-			if(sickfarm_no[i]==1)
+			if (sickfarm_no[i] == 1)
 			{
-				for(t=pigfarm[2];t!=nullptr;t=t->next )
+				for (t = pigfarm[2]; t != nullptr; t = t->next)
 				{
-					if(random(15)==1&&t->sick ==false)
+					if (random(15) == 1 && t->sick == false)
 					{
-						t->sick =true;
+						t->sick = true;
 						sum_sickpigs++;
-						if(pigfarm_sick[2]=false)
+						if (pigfarm_sick[2] == false)
 						{
-							pigfarm_sick[2]=true;
+							pigfarm_sick[2] = true;
 							int j;
-							for(j=0;sickfarm_no[j]!=-1;j++);
-							if(j<=99) sickfarm_no[j]=2;
+							for (j = 0; sickfarm_no[j] != -1; j++);
+							if (j <= 99) sickfarm_no[j] = 2;
 						}
 					}
 				}
 			}
-			if(sickfarm_no[i]==99)
+			else if (sickfarm_no[i] == 99)
 			{
-				for(t=pigfarm[98];t!=nullptr;t=t->next )
+				for (t = pigfarm[98]; t != nullptr; t = t->next)
 				{
-					if(random(15)==1&&t->sick ==false)
+					if (random(15) == 1 && t->sick == false)
 					{
-						t->sick =true;
+						t->sick = true;
 						sum_sickpigs++;
-						if(pigfarm_sick[98]=false)
+						if (pigfarm_sick[98] == false)
 						{
-							pigfarm_sick[98]=true;
+							pigfarm_sick[98] = true;
 							int j;
-							for(j=0;sickfarm_no[j]!=-1;j++);
-							if(j<=99) sickfarm_no[j]=98;
+							for (j = 0; sickfarm_no[j] != -1; j++);
+							if (j <= 99) sickfarm_no[j] = 98;
 						}
 					}
 				}
 			}
-			else if
+			else
 			{
-				for(t=pigfarm[sickfarm_no[i-1]];t!=nullptr;t=t->next )
+				for (t = pigfarm[sickfarm_no[i]-1]; t != nullptr; t = t->next)
 				{
-					if(random(15)==1&&t->sick ==false)
+					if (random(15) == 1 && t->sick == false)
 					{
-						t->sick =true;
+						t->sick = true;
 						sum_sickpigs++;
-						if(pigfarm_sick[sickfarm_no[i-1]]=false)
+						if (pigfarm_sick[sickfarm_no[i]-1] == false)
 						{
-							pigfarm_sick[sickfarm_no[i-1]]=true;
+							pigfarm_sick[sickfarm_no[i]-1] = true;
 							int j;
-							for(j=0;sickfarm_no[j]!=-1;j++);
-							if(j<=99) sickfarm_no[j]=sickfarm_no[i-1];
+							for (j = 0; sickfarm_no[j] != -1; j++);
+							if (j <= 99) sickfarm_no[j] = sickfarm_no[i]-1;
 						}
 					}
 				}
-				for(t=pigfarm[sickfarm_no[i-1]];t!=nullptr;t=t->next )
+				for (t = pigfarm[sickfarm_no[i]+1]; t != nullptr; t = t->next)
 				{
-					if(random(15)==1&&t->sick ==false)
+					if (random(15) == 1 && t->sick == false)
 					{
-						t->sick =true;
+						t->sick = true;
 						sum_sickpigs++;
-						if(pigfarm_sick[sickfarm_no[i+1]]=false)
+						if (pigfarm_sick[sickfarm_no[i]+1] == false)
 						{
-							pigfarm_sick[sickfarm_no[i+1]]=true;
+							pigfarm_sick[sickfarm_no[i]+1] = true;
 							int j;
-							for(j=0;sickfarm_no[j]!=-1;j++);
-							if(j<=99) sickfarm_no[j]=sickfarm_no[i+1];
+							for (j = 0; sickfarm_no[j] != -1; j++);
+							if (j <= 99) sickfarm_no[j] = sickfarm_no[i]+1;
 						}
 					}
 				}
 			}
 		}
-		
-	}
-	cout<<"Èç¹û²»²ÉÈ¡¸ôÀë´ëÊ©,"<<days<<"ÌìÖíÈ«²¿ËÀ¹â"; 
 
-	//Èç¹û²ÉÈ¡¸ôÀë´ëÊ©
-	int randill_isolate1=random(100) ;
-	while(randill_isolate==0) randill_isolate=random(100) ;
-	int randill_isolate2=random(numbers[randill_isolate1]);
-	for(t=pigfarm[randill_isolate1];t!=nullptr;t=t->next )
-	{
-		if(numbers[randill_isolate1]==1)
+	}
+	cout << "Èç¹û²»²ÉÈ¡¸ôÀë´ëÊ©," << days << "ÌìÖíÈ«²¿ËÀ¹â";
+	*/
+
+	/*
+		//Èç¹û²ÉÈ¡¸ôÀë´ëÊ©
+		int randill_isolate1=random(100) ;
+		Pig* previous;
+		while(numbers[randill_isolate1]==0) randill_isolate1=random(100) ;//randill_isolate1ÊÇÖíÈ¦µÄ±àºÅ
+		int randill_isolate2=random(numbers[randill_isolate1]);//randill_isolate2ÊÇµÃÁËÖíÎÁµÃÖíµÃ±àºÅ
+		int flag=0;
+		t=pigfarm[randill_isolate1];
+		previous=t;
+		//ÖíÈ¦ÀïÖ»ÓĞÒ»Í·Öí£¬ÄÇÍ·ÖíµÃÁËÖíÎÁ £¬½«ÆäÉ¾³ı
+		if(t->next==nullptr)
 		{
 			delete t;
 			t=nullptr;
 			numbers[randill_isolate1]=0;
-			break;
 		}
-		else
+		else//ÖíÈ¦ÖĞÓĞÁ½Í·»òÒÔÉÏµÄÖí
 		{
+			//µÚÒ»Í·Éú²¡ÁË
 			if(randill_isolate2==0)
 			{
-				pigfarm[randill_isolate1]=
+				pigfarm[randill_isolate1]=t->next;
+				delete t;
+				t=nullptr;
+				numbers[randill_isolate1]--;
+			}
+			//µÚrandill_isolate2Í·Éú²¡ÁË
+			else if(randill_isolate2<numbers[randill_isolate1])
+			{
+				if(flag==randill_isolate2)
+				{
+					previous->next=t->next;
+					delete t;
+					t=previous->next;
+				}
+				flag++;
+				previous=t;
+				t=t->next;
 			}
 		}
-	}
+	*/
 }
