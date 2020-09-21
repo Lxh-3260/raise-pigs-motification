@@ -423,7 +423,8 @@ int main()
 	memset(sickfarm_no, -1, sizeof(int) * 100);
 	sickfarm_no[0] = randill_1;//randill_1已经出现了猪瘟
 	int sickdays = 0;
-	while (alldie() != true)
+	sum_sickpigs=10;
+	while (sum_sickpigs<sum_pigs)
 	{
 		sickdays++;
 		//遍历sickfarm_no，直到猪圈中所有的猪都得上了猪瘟 
@@ -514,9 +515,7 @@ int main()
 	}
 	cout << "如果不采取隔离措施,总计" << sickdays << "天猪全部死光";
 	
-
-	/*
-		//如果采取隔离措施
+//如果采取隔离措施
 		int randill_isolate1=random(100) ;
 		Pig* previous;
 		while(numbers[randill_isolate1]==0) randill_isolate1=random(100) ;//randill_isolate1是猪圈的编号
@@ -555,5 +554,4 @@ int main()
 				t=t->next;
 			}
 		}
-	*/
 }
