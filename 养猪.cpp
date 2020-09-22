@@ -7,7 +7,6 @@
 #include<fstream> 
 
 #define random(x) (rand()%x)            //便于随机数的生成
-
 using namespace std;
 
 struct  Pig {
@@ -153,7 +152,7 @@ double  sellout(void)
 		if (nullptr == prev->next) continue;
 		t = prev->next;
 		t->number = prev->number + 1;
-		while ((t != nullptr)&&(nullptr != t->next))
+		while ((t != nullptr) && (nullptr != t->next))
 		{
 			if (sellable(t))
 			{
@@ -202,9 +201,24 @@ int main()
 
 	ofstream s_save;
 	s_save.open("buyrecord.txt", ofstream::app);//ofstream：：app是为了防止后面的数据覆盖前面的数据 
+	ofstream t_save;
+	t_save.open("sellrecord.txt", ofstream::app);//ofstream：：app是为了防止后面的数据覆盖前面的数据 
+	ofstream s;
+	s.open("pig_information.txt", ofstream::app);//ofstream：：app是为了防止后面的数据覆盖前面的数据 
 
+	for (int i = 0; i <= 80; i++)cout << "=";
+	cout << endl << endl;
+	for (int i = 0; i <= 32; i++)cout << " ";
+	cout << "欢迎来到我的养猪场"<<endl<<endl;
+	for (int i = 0; i <= 80; i++)cout << "=";
+	cout << endl << endl;
+	cout << "输入1进行五年的养猪模拟并存储数据到txt文件"<<endl<<endl;
+	int control0;
+	cin >> control0;
+	for (int i = 0; i <= 80; i++)cout << "#";
+	cout << endl << endl;
 	int hei = 0, hua = 0, bai = 0;
-	for (int i = 0; i <= initialization_1; i++)
+	for (int i = 0; i <= 900; i++)
 	{
 		Pig* t = new Pig(0, random(3) + 1, 0, ((double)random(300) + 200.0) / 10.0, false);
 		//初始化第一批幼崽的信息 ，编号都和饲养时长都初始化为0，后面的函数会编号和改变饲养时长，猪的品种和体重都用随机数生成
@@ -213,36 +227,23 @@ int main()
 		if (t->colour == 3) bai++;
 		putin(t);
 	}
-
+	s_save.open("buyrecord.txt", ofstream::app);//ofstream：：app是为了防止后面的数据覆盖前面的数据
 	s_save << "开始游戏第一次购入:" << hei << "头黑猪 " << hua << "头小花猪 " << bai << "头大白花猪" << endl;
 	s_save.close();//每次存档之后要关闭 
 
-//之后加覆盖存档的判断条件
-	/*
-		s_save.open("buyrecord.txt");
-		s_save << " ";//覆盖之前存档	
-	*/
-
 	int days = 0;
-	while (days != 1830)					//五年 
+	while (days != 1850)					//五年 
 	{
 		days++;
 		gainweight();
 		//每天都要给猪增长体重和饲养时长
 		if (days % 90 == 0)                    //90天出圈一批猪
 		{
-			int sell_1 = 0;
+			double sell_1 = 0;
 			sell_1 = sellout();
-
-			ofstream t_save;
-			t_save.open("sellrecord.txt", ofstream::app);//ofstream：：app是为了防止后面的数据覆盖前面的数据 
+			t_save.open("sellrecord.txt", ofstream::app);//ofstream：：app是为了防止后面的数据覆盖前面的数据
 			t_save << "本次出圈的猪总体售价" << sell_1 << endl;
 			t_save.close();
-
-			/*
-				t_save.open("sellrecord.txt");
-				t_save << " ";//覆盖之前存档
-			*/
 
 			cout << "本次出圈的猪总体售价" << sell_1 << endl;
 			int initialization_2 = random(500);//卖完后随机生成新的猪崽
@@ -256,25 +257,23 @@ int main()
 				if (t->colour == 3) bai++;
 				if (putin(t) == false) break;    //执行判断函数putin，并将猪崽放入
 			}
-			ofstream s_save;
+			
 			s_save.open("buyrecord.txt", ofstream::app);//ofstream：：app是为了防止后面的数据覆盖前面的数据 
 			s_save << "本次购入:" << hei << "头黑猪 " << hua << "头小花猪 " << bai << "头大白花猪" << endl;
 			s_save.close();//每次存档之后要关闭 
 
-			//之后加覆盖存档的判断条件
-			/*
-			s_save.open("buyrecord.txt");
-			s_save << " ";//覆盖之前存档
-			*/
+			
 			cout << "放入猪崽后各猪圈中猪的数量：" << endl;
 			for (int i = 0; i <= 99; i++) cout << numbers[i] << " ";
 			cout << endl << endl;
 		}
+		
 	}
+	for (int i = 0; i <= 80; i++)cout << "#";
+	cout << endl << endl;
 	//保存当前养猪场的信息
 	for (int i = 0; i <= 99; i++)
 	{
-		ofstream s;
 		s.open("pig_information.txt", ofstream::app);//ofstream：：app是为了防止后面的数据覆盖前面的数据 
 		s << "第" << i << "个养猪场的信息：" << endl;
 		for (Pig* t = pigfarm[i]; t != nullptr; t = t->next)
@@ -282,21 +281,18 @@ int main()
 			s << "猪的编号是:" << t->number << "	" << "猪的体重是" << t->weight << "	" << "猪的饲养时长是" << t->life << "天" << endl;
 		}
 		s.close();//每次存档之后要关闭
-
-		/*
-			s.open("pig_information.txt");
-			s << " ";//覆盖之前存档
-		*/
+		
 	}
-	
-	
+
 
 	//查询特定猪圈的猪的种类和数量
 	Pig* t;
 	int x;
 	int a[3] = { 0 };
-	cout << endl << "输入你要查询的猪圈编号:";
+	cout << endl << endl << "输入你要查询的猪圈编号:";
 	cin >> x;                                    //x为你要查询的猪圈编号
+	for (int i = 0; i <= 80; i++)cout << "#";
+	cout << endl << endl;
 	t = pigfarm[x];
 	for (; t != nullptr; t = t->next)
 	{
@@ -311,8 +307,10 @@ int main()
 	cout << endl << "输入你要查询的猪的编号：";
 	int no_pig;
 	cin >> no_pig;
+	for (int i = 0; i <= 80; i++)cout << "#";
+	cout << endl << endl;
 	t = pigfarm[x];
-	if (no_pig > numbers[x] || no_pig <= 0) cout << "猪圈内没有这头猪" << endl;
+	if (no_pig > numbers[x] || no_pig <= 0) cout << "猪圈内没有这头猪" << endl << endl;
 	else
 	{
 		int flag(1);
@@ -320,17 +318,17 @@ int main()
 		{
 			if (flag == no_pig)
 			{
-				if (t->colour == 1) cout << "猪的种类为黑猪" << endl;
-				else if (t->colour == 2) cout << "猪的种类为白猪" << endl;
-				else if (t->colour == 3) cout << "猪的种类为大白花猪" << endl;
-				cout << "猪的饲养时长为" << t->life << "天" << endl;
-				cout << "猪的体重为" << t->weight << "千克" << endl;;
+				if (t->colour == 1) cout << "猪的种类为黑猪" << endl << endl;
+				else if (t->colour == 2) cout << "猪的种类为白猪" << endl << endl;
+				else if (t->colour == 3) cout << "猪的种类为大白花猪" << endl << endl;
+				cout << "猪的饲养时长为" << t->life << "天" << endl << endl;
+				cout << "猪的体重为" << t->weight << "千克" << endl << endl;
 			}
 			flag++;
 		}
 		t = nullptr;
 	}
-
+	
 	//统计当前猪圈每个种类猪的数量，体重，饲养时间分布情况
 	int number_pigs[3] = { 0 };
 	//number_pigs[0]为黑猪总数，number_pigs[1]为小花猪总数，number_pigs[2]为大白花猪总数
@@ -370,188 +368,224 @@ int main()
 	}
 	t = nullptr;
 	sum_pigs = number_pigs[0] + number_pigs[1] + number_pigs[2];
-	cout << "黑猪的总数量为：" << number_pigs[0] << "头" << endl;
-	cout << "花猪的总数量为：" << number_pigs[1] << "头" << endl;
-	cout << "大白花猪的总数量为：" << number_pigs[2] << "头" << endl;
-	cout << "黑猪的总体重为：" << weight_pigs[0] << "kg" << endl;
-	cout << " 花猪的总体重为：" << weight_pigs[1] << "kg" << endl;
-	cout << "大白花猪的总体重为：" << weight_pigs[2] << "kg" << endl;
-	cout << "黑猪饲养时长0~90天有：" << life_pigs1[0] << "头" << endl;
-	cout << "黑猪饲养时长90天以上有：" << life_pigs3[0] << "头" << endl;
-	cout << "花猪饲养时长0~90天有：" << life_pigs1[1] << "头" << endl;
-	cout << "花猪饲养时长90天以上有：" << life_pigs3[1] << "头" << endl;
-	cout << "大白花猪猪饲养时长0~90天有：" << life_pigs1[2] << "头" << endl;
-	cout << "大白花猪饲养时长90天以上有：" << life_pigs3[2] << "头" << endl;
+	cout << "黑猪的总数量为：" << number_pigs[0] << "头" << endl << endl;
+	cout << "花猪的总数量为：" << number_pigs[1] << "头" << endl << endl;
+	cout << "大白花猪的总数量为：" << number_pigs[2] << "头" << endl << endl;
+	cout << "黑猪的总体重为：" << weight_pigs[0] << "kg" << endl << endl;
+	cout << " 花猪的总体重为：" << weight_pigs[1] << "kg" << endl << endl;
+	cout << "大白花猪的总体重为：" << weight_pigs[2] << "kg" << endl << endl;
+	cout << "黑猪饲养时长0~90天有：" << life_pigs1[0] << "头" << endl << endl;
+	cout << "黑猪饲养时长90天以上有：" << life_pigs3[0] << "头" << endl << endl;
+	cout << "花猪饲养时长0~90天有：" << life_pigs1[1] << "头" << endl << endl;
+	cout << "花猪饲养时长90天以上有：" << life_pigs3[1] << "头" << endl << endl;
+	cout << "大白花猪猪饲养时长0~90天有：" << life_pigs1[2] << "头" << endl << endl;
+	cout << "大白花猪饲养时长90天以上有：" << life_pigs3[2] << "头" << endl << endl;
 
+	for (int i = 0; i <= 80; i++)cout << "#";
+	cout << endl << endl;
 
-	//模拟养猪场某一只猪得了猪瘟
-	bool pigfarm_sick[100];
-	memset(pigfarm_sick, false, sizeof(bool) * 100);	//bool数组每个都置false，表示现在还没有猪生病 
-	int randill_1 = random(100);
-	while (numbers[randill_1] == 0) randill_1 = random(100);
-	int randill_2 = random(numbers[randill_1]);
-	//随机生成一个生病的猪圈,编号为randill_1,随机生成一个生病的猪，该猪是猪圈中第randill_2头猪
-	pigfarm_sick[randill_1] = true;
-	int flag_sick = 0;
-	int sum_sickpigs = 0;
-	//编号为randill_2号的猪感染上猪瘟 
-	for (t = pigfarm[randill_1]; t != nullptr; t = t->next)
+	cout << "是否进行疫情模拟,如果要则输入1，不要则输入0" << endl;
+	int control1;
+	cin >> control1;
+	for (int i = 0; i <= 80; i++)cout << "#";
+	cout << endl << endl;
+	if (control1 == true)
 	{
-		if (randill_2 == 0)
+		//模拟养猪场某一只猪得了猪瘟
+		bool pigfarm_sick[100];
+		memset(pigfarm_sick, false, sizeof(bool) * 100);	//bool数组每个都置false，表示现在还没有猪生病 
+		int randill_1 = random(100);
+		while (numbers[randill_1] == 0) randill_1 = random(100);
+		int randill_2 = random(numbers[randill_1]);
+		//随机生成一个生病的猪圈,编号为randill_1,随机生成一个生病的猪，该猪是猪圈中第randill_2头猪
+		pigfarm_sick[randill_1] = true;
+		int flag_sick = 0;
+		int sum_sickpigs = 0;
+		//编号为randill_2号的猪感染上猪瘟 
+		for (t = pigfarm[randill_1]; t != nullptr; t = t->next)
 		{
-			t->sick = true;
-			sum_sickpigs++;
-			break;
-		}
-		else
-		{
-			t = t->next;
-			flag_sick++;
-			if (flag_sick == randill_2)
+			if (randill_2 == 0)
 			{
 				t->sick = true;
 				sum_sickpigs++;
 				break;
 			}
-		}
-	}
-	t = nullptr;
-	
-
-	//开始传播瘟疫
-	int sickfarm_no[100];//用于记录下有瘟疫存在的猪圈的编号，方便之后遍历 
-	memset(sickfarm_no, -1, sizeof(int) * 100);
-	sickfarm_no[0] = randill_1;//randill_1已经出现了猪瘟
-	int sickdays = 0;
-	sum_sickpigs=10;
-	while (sum_sickpigs<sum_pigs)
-	{
-		sickdays++;
-		//遍历sickfarm_no，直到猪圈中所有的猪都得上了猪瘟 
-		for (int i = 0; sickfarm_no[i] != -1; i++)
-		{
-			//遍历sickfarm_no[i]号猪圈，50%概率生病
-			for (t = pigfarm[sickfarm_no[i]]; t != nullptr; t = t->next)
+			else
 			{
-				if (t->sick == false && random(2) == 1)
+				t = t->next;
+				flag_sick++;
+				if (flag_sick == randill_2)
 				{
 					t->sick = true;
 					sum_sickpigs++;
+					break;
 				}
 			}
-			//若sickfarm_no[i]==1,则只传染2号猪圈
-			if (sickfarm_no[i] == 1)
+		}
+		t = nullptr;
+		//开始传播瘟疫
+		int sickfarm_no[100];//用于记录下有瘟疫存在的猪圈的编号，方便之后遍历 
+		memset(sickfarm_no, -1, sizeof(int) * 100);
+		sickfarm_no[0] = randill_1;//randill_1已经出现了猪瘟
+		int sickdays = 0;
+		sum_sickpigs = 10;
+		while (sum_sickpigs < sum_pigs)
+		{
+			sickdays++;
+			//遍历sickfarm_no，直到猪圈中所有的猪都得上了猪瘟 
+			for (int i = 0; sickfarm_no[i] != -1; i++)
 			{
-				for (t = pigfarm[2]; t != nullptr; t = t->next)
+				//遍历sickfarm_no[i]号猪圈，50%概率生病
+				for (t = pigfarm[sickfarm_no[i]]; t != nullptr; t = t->next)
 				{
-					if (t->sick == false && (random(20) == 1 || random(20) == 2 || random(20) == 3))
+					if (t->sick == false && random(2) == 1)
 					{
 						t->sick = true;
 						sum_sickpigs++;
-						if (pigfarm_sick[2] == false)
+					}
+				}
+				//若sickfarm_no[i]==0,则只传染2号猪圈
+				if (sickfarm_no[i] == 0)
+				{
+					for (t = pigfarm[1]; t != nullptr; t = t->next)
+					{
+						if (t->sick == false && (random(20) == 1 || random(20) == 2 || random(20) == 3))
 						{
-							pigfarm_sick[2] = true;
-							int j;
-							for (j = 0; sickfarm_no[j] != -1; j++);
-							if (j <= 99) sickfarm_no[j] = 2;
+							t->sick = true;
+							sum_sickpigs++;
+							if (pigfarm_sick[1] == false)
+							{
+								pigfarm_sick[1] = true;
+								int j;
+								for (j = 0; sickfarm_no[j] != -1; j++);
+								if (j <= 99) sickfarm_no[j] = 1;
+							}
+						}
+					}
+				}
+				//若sickfarm_no[i]==99,则只传染98号猪圈
+				else if (sickfarm_no[i] == 99)
+				{
+					for (t = pigfarm[98]; t != nullptr; t = t->next)
+					{
+						if (t->sick == false && (random(20) == 1 || random(20) == 2 || random(20) == 3))
+						{
+							t->sick = true;
+							sum_sickpigs++;
+							if (pigfarm_sick[98] == false)
+							{
+								pigfarm_sick[98] = true;
+								int j;
+								for (j = 0; sickfarm_no[j] != -1; j++);
+								if (j <= 99) sickfarm_no[j] = 98;
+							}
+						}
+					}
+				}
+				//sickfarm_no[i]==1~98，传染相邻猪圈
+				else
+				{
+					for (t = pigfarm[sickfarm_no[i] - 1]; t != nullptr; t = t->next)
+					{
+						if (t->sick == false && (random(20) == 1 || random(20) == 2 || random(20) == 3))
+						{
+							t->sick = true;
+							sum_sickpigs++;
+							if (pigfarm_sick[sickfarm_no[i] - 1] == false)
+							{
+								pigfarm_sick[sickfarm_no[i] - 1] = true;
+								int j;
+								for (j = 0; sickfarm_no[j] != -1; j++);
+								if (j <= 99) sickfarm_no[j] = sickfarm_no[i] - 1;
+							}
+						}
+					}
+					for (t = pigfarm[sickfarm_no[i] + 1]; t != nullptr; t = t->next)
+					{
+						if (t->sick == false && (random(20) == 1 || random(20) == 2 || random(20) == 3))
+						{
+							t->sick = true;
+							sum_sickpigs++;
+							if (pigfarm_sick[sickfarm_no[i] + 1] == false)
+							{
+								pigfarm_sick[sickfarm_no[i] + 1] = true;
+								int j;
+								for (j = 0; sickfarm_no[j] != -1; j++);
+								if (j <= 99) sickfarm_no[j] = sickfarm_no[i] + 1;
+							}
 						}
 					}
 				}
 			}
-			//若sickfarm_no[i]==99,则只传染98号猪圈
-			else if (sickfarm_no[i] == 99)
+		}
+		cout << "如果不采取隔离措施,总计" << sickdays << "天猪全部死光" << endl << endl;
+	}
+	if (control1 == 1)
+	{
+		cout << "是否采取隔离措施，如果采取输入1，不采取输入0" << endl << endl;
+		int control2;
+		cin >> control2;
+		for (int i = 0; i <= 80; i++)cout << "#";
+		cout << endl << endl;
+		if (control2 == 1)
+		{
+			//如果采取隔离措施
+			int randill_isolate1 = random(100);
+			Pig* previous;
+			while (numbers[randill_isolate1] == 0) randill_isolate1 = random(100);//randill_isolate1是猪圈的编号
+			int randill_isolate2 = random(numbers[randill_isolate1]);//randill_isolate2是得了猪瘟得猪得编号
+			int flag = 0;
+			t = pigfarm[randill_isolate1];
+			previous = t;
+			//猪圈里只有一头猪，那头猪得了猪瘟 ，将其删除
+			if (t->next == nullptr)
 			{
-				for (t = pigfarm[98]; t != nullptr; t = t->next)
-				{
-					if (t->sick == false && (random(20) == 1 || random(20) == 2 || random(20) == 3))
-					{
-						t->sick = true;
-						sum_sickpigs++;
-						if (pigfarm_sick[98] == false)
-						{
-							pigfarm_sick[98] = true;
-							int j;
-							for (j = 0; sickfarm_no[j] != -1; j++);
-							if (j <= 99) sickfarm_no[j] = 98;
-						}
-					}
-				}
+				delete t;
+				t = nullptr;
+				numbers[randill_isolate1] = 0;
 			}
-			//sickfarm_no[i]==2~98，传染相邻猪圈
-			else
+			else//猪圈中有两头或以上的猪
 			{
-				for (t = pigfarm[sickfarm_no[i]-1]; t != nullptr; t = t->next)
+				//第一头生病了
+				if (randill_isolate2 == 0)
 				{
-					if (t->sick == false && (random(20) == 1 || random(20) == 2 || random(20) == 3))
-					{
-						t->sick = true;
-						sum_sickpigs++;
-						if (pigfarm_sick[sickfarm_no[i]-1] == false)
-						{
-							pigfarm_sick[sickfarm_no[i]-1] = true;
-							int j;
-							for (j = 0; sickfarm_no[j] != -1; j++);
-							if (j <= 99) sickfarm_no[j] = sickfarm_no[i]-1;
-						}
-					}
+					pigfarm[randill_isolate1] = t->next;
+					delete t;
+					t = nullptr;
+					numbers[randill_isolate1]--;
 				}
-				for (t = pigfarm[sickfarm_no[i]+1]; t != nullptr; t = t->next)
+				//第randill_isolate2头生病了
+				else if (randill_isolate2 < numbers[randill_isolate1])
 				{
-					if (t->sick == false && (random(20) == 1 || random(20) == 2 || random(20) == 3))
+					if (flag == randill_isolate2)
 					{
-						t->sick = true;
-						sum_sickpigs++;
-						if (pigfarm_sick[sickfarm_no[i]+1] == false)
-						{
-							pigfarm_sick[sickfarm_no[i]+1] = true;
-							int j;
-							for (j = 0; sickfarm_no[j] != -1; j++);
-							if (j <= 99) sickfarm_no[j] = sickfarm_no[i]+1;
-						}
+						previous->next = t->next;
+						delete t;
+						t = previous->next;
 					}
+					flag++;
+					previous = t;
+					t = t->next;
 				}
 			}
 		}
 	}
-	cout << "如果不采取隔离措施,总计" << sickdays << "天猪全部死光";
-	
-//如果采取隔离措施
-		int randill_isolate1=random(100) ;
-		Pig* previous;
-		while(numbers[randill_isolate1]==0) randill_isolate1=random(100) ;//randill_isolate1是猪圈的编号
-		int randill_isolate2=random(numbers[randill_isolate1]);//randill_isolate2是得了猪瘟得猪得编号
-		int flag=0;
-		t=pigfarm[randill_isolate1];
-		previous=t;
-		//猪圈里只有一头猪，那头猪得了猪瘟 ，将其删除
-		if(t->next==nullptr)
-		{
-			delete t;
-			t=nullptr;
-			numbers[randill_isolate1]=0;
-		}
-		else//猪圈中有两头或以上的猪
-		{
-			//第一头生病了
-			if(randill_isolate2==0)
-			{
-				pigfarm[randill_isolate1]=t->next;
-				delete t;
-				t=nullptr;
-				numbers[randill_isolate1]--;
-			}
-			//第randill_isolate2头生病了
-			else if(randill_isolate2<numbers[randill_isolate1])
-			{
-				if(flag==randill_isolate2)
-				{
-					previous->next=t->next;
-					delete t;
-					t=previous->next;
-				}
-				flag++;
-				previous=t;
-				t=t->next;
-			}
-		}
+	cout << "是否删除txt文件中这次模拟的存档，是则输入1，不是则输入2" << endl << endl;
+	int control5;
+	cin >> control5;
+	for (int i = 0; i <= 80; i++)cout << "#";
+	cout << endl << endl;
+	if (control5 == 1)
+	{
+		s_save.open("buyrecord.txt");
+		s_save << " ";//覆盖之前存档
+		t_save.open("sellrecord.txt");
+		t_save << " ";//覆盖之前存档
+		s.open("pig_information.txt");
+		s << " ";//覆盖之前存档
+	}
+	cout << "欢乐的养猪结束啦，再见~" << endl << endl;
+	for (int i = 0; i <= 80; i++)cout << "#";
+	cout << endl << endl;
+	return 0;
 }
